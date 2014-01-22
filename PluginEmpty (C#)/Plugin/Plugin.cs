@@ -19,7 +19,7 @@ namespace Plugin
             
         }
 
-        internal void Reload(ref double maxValue)
+        internal void Reload(API api, ref double maxValue)
         {
 
         }
@@ -53,7 +53,7 @@ namespace Plugin
 
         public static void Reload(IntPtr data, IntPtr rm, ref double maxValue)
         {
-            ((Measure)GCHandle.FromIntPtr(data).Target).Reload(ref maxValue);
+            ((Measure)GCHandle.FromIntPtr(data).Target).Reload(new API(rm), ref maxValue);
         }
 
         public static double Update(IntPtr data)

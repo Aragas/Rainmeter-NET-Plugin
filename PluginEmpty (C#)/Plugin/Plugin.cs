@@ -41,34 +41,49 @@ namespace Plugin
 
     public static class Plugin
     {
+     static readonly Dictionary<uint, Measure> Measures = new Dictionary<uint, Measure>();
         public static void Initialize(ref IntPtr data, IntPtr rm)
         {
-            data = GCHandle.ToIntPtr(GCHandle.Alloc(new Measure(new API(rm))));
+            var id = (uint)*data;
+            Measures.Add(id, new Measure());
+            Measures[id].Initialize(new API((IntPtr)rm));
+            //data = GCHandle.ToIntPtr(GCHandle.Alloc(new Measure(new API(rm))));
         }
 
         public static void Finalize(IntPtr data)
         {
-            GCHandle.FromIntPtr(data).Free();
+            var id = (uint)data;
+            Measures[id].Finalize();
+            Measures.Remove(id);
+            //GCHandle.FromIntPtr(data).Free();
         }
 
         public static void Reload(IntPtr data, IntPtr rm, ref double maxValue)
         {
-            ((Measure)GCHandle.FromIntPtr(data).Target).Reload(new API(rm), ref maxValue);
+            var id = (uint)data;
+            Measures[id].Reload(new API((IntPtr)rm), ref *maxValue);
+            //((Measure)GCHandle.FromIntPtr(data).Target).Reload(new API(rm), ref maxValue);
         }
 
         public static double Update(IntPtr data)
         {
-            return ((Measure)GCHandle.FromIntPtr(data).Target).Update();
+            var id = (uint)data;
+            return Measures[id].GetDouble();
+            //return ((Measure)GCHandle.FromIntPtr(data).Target).Update();
         }
 
         public static string GetString(IntPtr data)
         {
+            //var id = (uint)data;
+            //fixed (char* s = Measures[id].GetString()) return s;
             //return ((Measure)GCHandle.FromIntPtr(data).Target).GetString();
             return "";
         }
 
         public static void ExecuteBang(IntPtr data, string args) 
         {
+            //var id = (uint)data;
+            //Measures[id].ExecuteBang(new string(args));
             //((Measure)GCHandle.FromIntPtr(data).Target).ExecuteBang(args);
         }
     }

@@ -46,7 +46,6 @@ namespace Plugin
         {
             var id = (uint)*data;
             Measures.Add(id, new Measure());
-            Measures[id].Initialize(new API((IntPtr)rm));
             //data = GCHandle.ToIntPtr(GCHandle.Alloc(new Measure(new API(rm))));
         }
 
